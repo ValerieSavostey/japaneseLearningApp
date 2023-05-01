@@ -1,0 +1,233 @@
+#:import WordsMn wordsManager.wordsMn
+#:set bc (0,.5,.5,1)
+#:set btn_c (0, .8, 1 , .9)
+#:set btn_c_2 (.9,.9,.9,.9 )
+JPWordsClass:
+
+
+<MainMenu>:
+    name: 'MainMenu'
+    canvas.before:
+        Color:
+            rgba: bc
+        Rectangle:
+            size: self.size
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint: None, 0.9
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        size: ("200dp",0)
+        spacing: "10dp"
+        Button:
+            text: 'N5'
+            background_color: btn_c_2
+            on_press: root.choose_level(self)
+        Button:
+            text: 'N4'
+            background_color: btn_c_2
+            on_press: root.choose_level(self)
+        Button:
+            text: 'N3'
+            background_color: btn_c_2
+            on_press: root.choose_level(self)
+        Button:
+            text: 'N2'
+            background_color: btn_c_2
+            on_press: root.choose_level(self)
+        Button:
+            text: 'N1'
+            background_color: btn_c_2
+            on_press: root.choose_level(self)
+
+
+<LevelManager>:
+    name: 'Generate'
+    canvas.before:
+        Color:
+            rgba: bc
+        Rectangle:
+            size: self.size
+    BackButton:
+        on_press: root.back_screen("MainMenu")
+
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint: 0.7, 0.4
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        spacing: 20
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: 15
+            size_hint: 1 , 0.8
+            Button:
+                text: "Options"
+                background_color: btn_c_2
+                on_press: root.next_screen("Options")
+            Button:
+                background_color: btn_c_2
+                text: "Library"
+                on_press: root.library()
+        Button:
+            text: "Generate"
+            background_color: btn_c
+            on_press: root.generate()
+
+<Options>:
+    name:'Options'
+
+    canvas.before:
+        Color:
+            rgba: bc
+        Rectangle:
+            size: self.size
+    BackButton:
+        on_press: root.back_screen("Generate")
+
+    BoxLayout:
+        padding: 30
+        spacing: "100dp"
+        size_hint:0.9, 1,
+        pos_hint: {"right":1}
+        orientation:"vertical"
+        Label:
+            text:"Choose amount of words"
+            size_hint: 1, 0.2
+            font_size: root.width/15
+            color: 1 , 1, 1 , 1
+        Label:
+            text:str(slider.value)
+            color: 1 , 1, 1 , 1
+        Slider:
+            id:slider
+            min:1
+            max:10
+            step:1
+            orientation:"horizontal"
+        Button:
+            text:"Submit"
+            background_color: 0, .8 , 1 , .9
+            color: 1 , 1, 1 , 1
+            on_press:
+                root.save_changes(slider)
+                root.back_screen()
+
+
+<LessonScreen>:
+    name:'Lesson'
+    canvas.before:
+        Color:
+            rgba: bc
+        Rectangle:
+            size: self.size
+    pos_hint: {"center_x" : .5, "top": 1}
+    size_hint: 1 , 1
+    ScrollView:
+        do_scroll_x: True
+        do_scroll_y: True
+        scroll_y: 1
+        scroll_distance: "1dp"
+        scroll_wheel_distance:"10dp"
+        pos_hint: {"center_x" : .5, "top": 1}
+        BoxLayout:
+            orientation:'vertical'
+            size_hint: 1 , None
+            pos_hint: {"center_x" : .5, "top": 1}
+            height: self.minimum_height
+            BoxLayout:
+
+                orientation: 'vertical'
+                pos_hint: {"center_x" : .5, "top": 1}
+                size_hint: 1 , None
+                size:(0, "200dp")
+
+                BoxLayout:
+                    id: word_reading
+                    orientation: 'horizontal'
+                    pos_hint: {"center_x" : .5, "top": 1}
+                    size_hint: 1, .5
+                    JPLabel:
+                        id: word
+                        font_size:root.width/12
+
+                    JPLabel:
+                        id: reading
+                        font_size:root.width/12
+                Label:
+                    id: meaning
+                    size_hint: 1, .5
+                    font_size:root.width/25
+
+            Label:
+                size_hint: 1, None
+                height: "200dp"
+                text:"Examples"
+                halign:"center"
+                valign:"center"
+                font_size:root.width/18
+            BoxLayout:
+                id:examples
+                orientation:"vertical"
+                size_hint: 1, None
+                height: self.minimum_height
+                pos_hint: {"center_x": .5}
+            BoxLayout:
+                id:next_prev_btns
+                orientation:"horizontal"
+                size_hint: 1, None
+                height: "50dp"
+                spacing: "10dp"
+
+<Library>:
+    name:'Library'
+    canvas.before:
+        Color:
+            rgba: bc
+        Rectangle:
+            size: self.size
+    BoxLayout:
+        size_hint:(1,1)
+        BackButton:
+            on_press: root.back_screen("Generate")
+        ScrollView:
+            StackLayout:
+                id:lesson_library
+                orientation:"lr-tb"
+                size_hint : 1 , None
+                padding: "40dp"
+                height: self.minimum_height
+                spacing:"10dp"
+
+
+
+# some usefull pieces
+
+<Example>:
+    orientation: "vertical"
+    pos_hint: {"center_x" : .5, "top": 1}
+    size_hint: 1, None
+    height: "200dp"
+    padding: "20dp"
+    JPLabel:
+        id:kanji
+        font_size: root.width / (20+len(self.text)*0.2)
+    JPLabel:
+        id:furigana
+        font_size: root.width / (20+len(self.text)*0.2)
+    JPLabel:
+        id:romaji
+        font_size: root.width / (20+len(self.text)*0.2)
+<JPLabel>
+    font_name: "Japanese"
+
+<BackButton@Button>:
+    text: "<"
+    size_hint: .1, 1
+    pos_hint: { "x" : 0, "top" : 1}
+    background_color: btn_c
+<JPAppScreen>:
+    size_hint: 1, 1
+<JPWordsClass>:
+    size_hint:1,1
+    MainMenu:
+    LevelManager:
+    Options:
